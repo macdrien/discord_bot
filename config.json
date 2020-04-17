@@ -1,0 +1,6 @@
+{
+    "token": "Your-token-here",
+    "commandPrefix": "/",
+    "roleWhichCanRunCommands": "commander",
+    "commandChannel": "commandes-bot"
+}

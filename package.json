@@ -1,0 +1,24 @@
+{
+  "name": "goodgame_discord_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macdrien/goodgame_discord_bot.git"
+  },
+  "keywords": [],
+  "author": "macdrien <adrien.bouyssou@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/macdrien/goodgame_discord_bot/issues"
+  },
+  "homepage": "https://github.com/macdrien/goodgame_discord_bot#readme",
+  "dependencies": {
+    "discord.js": "^12.1.1"
+  }
+}
