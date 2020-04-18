@@ -1,1 +1,1 @@
-# goodgame-discord-bot
+# discord-bot
