@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 // Modules and commands file
+const Random = require('./commands/randomCommands');
 const TeamManager = require('./commands/teamManager');
 
 bot.once('ready', () => {
@@ -21,9 +22,16 @@ bot.on('message', message => {
     const command = message.content.slice(config.commandPrefix).split(' ').shift().substr(1);
 
     switch (command) {
+        // Test command
+        case 'ping':
+            message.channel.send('Pong!');
+            break;
         // Command create a team
         case 'createTeam':
             TeamManager.createTeam(message);
+            break;
+        case 'pf':
+            Random.pileFace(message);
             break;
     }
 });
