@@ -33,6 +33,9 @@ bot.on('message', message => {
         case 'pf':
             Random.pileFace(message);
             break;
+        case 'roll':
+            Random.rollDice(message);
+            break;
     }
 });
 
