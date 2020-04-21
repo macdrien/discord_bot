@@ -2,6 +2,11 @@ const Permissions = require('discord.js/src/util/Permissions');
 
 const config = require('../config.json');
 
+const Log = require('../logSystem');
+
+// Tools
+const TableTools = require('../tools/tableTools');
+
 module.exports = {
     /**
      * Get the command received by the bot.
@@ -31,8 +36,11 @@ module.exports = {
             if (args[counter] === ' ' || args[counter] === '')
                 args.splice(counter, 1);
 
+        Log.log(`Arguments : ${args}`);
+
         // Verify the arguments of the command
         if (args.length < 3) {
+            Log.error(`The number of command argument is lower than 3, abort command.`);
             return;
         }
 
@@ -44,6 +52,8 @@ module.exports = {
             }
         })
             .then(role => {
+
+                Log.log(`The role ${role.name} is successfully created.`);
 
                 args.splice(0, 1);
 
@@ -62,14 +72,68 @@ module.exports = {
                         ],
                         type: 'role',
                     }],
-                });
+                })
+                    .then(channel => Log.log(`The channel ${channel.name} is successfully created`))
+                    .catch(error => Log.error(`Error during the channel creation : ${error}`));
 
                 // Add given members to the team
                 message.guild.members.cache.filter(member => args.map(usernameToFind => {
                     if (member.nickname === usernameToFind || member.user.username === usernameToFind)
                         member.roles.add(role)
-                            .catch(error => message.channel.send(`Error adding role ${role.name} to ${member.user.username}`));
+                            .then(() => Log.log(`Role ${role.name} added to the user ${member.user.name}`))
+                            .catch(error => {
+                                const errorMessage = `Error adding role ${role.name} to ${member.user.name}`;
+                                Log.error(errorMessage);
+                                message.channel.send(errorMessage);
+                            });
                 }));
-            });
+            })
+            .catch(error => Log.error(`Error during the role creation : ${error}`));
+    },
+    /**
+     * Delete a team.
+     * A team is defined by its name. A team is a role and a channel with the team name.
+     * 
+     * This method delete the channel with the given team name and
+     * next it delete the associated role.
+     * 
+     * @param {*} message The message received by the bot
+     */
+    deleteTeam(message) {
+        var args = message.content
+            .slice(config.commandPrefix)
+            .split('"');
+        args.shift();
+
+        args = TableTools.whiteSpaceSplicer(args);
+
+        Log.log(`Arguments : ${args}`);
+
+        if (args.length == 0) {
+            Log.error(`The command has no argument.`);
+            return;
+        }
+
+        // Search the channel and delete it
+        message.guild.channels.cache.some(channel => {
+            if (channel.name == args[0])
+                channel.delete()
+                    .then(channel => `The channel ${channel.name} is deleted`)
+                    .catch(error => {
+                        Log.error(`Error during the deletion of the channel ${channel.name}`)
+                        Log.error(error);
+                    });
+        });
+
+        // Search the role and delete it
+        message.guild.roles.cache.some(role => {
+            if (role.name == args[0])
+                role.delete()
+                    .then(role => `The role ${role.name} is deleted`)
+                    .catch(error => {
+                        Log.error(`Error during the deletion of the role ${role.name}`)
+                        Log.error(error);
+                    });
+        });
     }
 };

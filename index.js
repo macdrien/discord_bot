@@ -3,12 +3,15 @@ const config = require('./config.json');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+const Log = require('./logSystem');
+
 // Modules and commands file
 const Random = require('./commands/randomCommands');
 const TeamManager = require('./commands/teamManager');
 
 bot.once('ready', () => {
-    console.log('Bot up!');
+    Log.log('Bot up');
+    Log.addSeparator();
 });
 
 bot.on('message', message => {
@@ -24,18 +27,61 @@ bot.on('message', message => {
     switch (command) {
         // Test command
         case 'ping':
+            Log.log('New ping command');
+            Log.startGroup();
+
             message.channel.send('Pong!');
+
+            Log.closeGroup();
+            Log.log('End ping command');
+
             break;
         // Command create a team
         case 'createTeam':
+            Log.log('New createTeam command');
+            Log.startGroup();
+
             TeamManager.createTeam(message);
+
+            Log.closeGroup();
+            Log.log('End createTeam command');
+
             break;
+        // Command delete a team
+        case 'deleteTeam':
+            Log.log('New deleteTeam command');
+            Log.startGroup();
+
+            TeamManager.deleteTeam(message);
+
+            Log.closeGroup();
+            Log.log('End deleteTeam command');
+
+            break;
+        // Flip a coin command (pf for 'Pile ou Face' in french)
         case 'pf':
+            Log.log('New pf command');
+            Log.startGroup();
+
             Random.pileFace(message);
+
+            Log.closeGroup();
+            Log.log('End pf command');
+
             break;
+        // Command to roll dices
         case 'roll':
+            Log.log('New roll command');
+            Log.startGroup();
+
             Random.rollDice(message);
+
+            Log.closeGroup();
+            Log.log('End roll command');
+
             break;
+        default:
+            Log.log(`The command "${command}" does not exist`);
     }
 });
 
